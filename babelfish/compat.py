@@ -4,6 +4,7 @@
 # Use of this source code is governed by the 3-clause BSD license
 # that can be found in the LICENSE file.
 #
+import io
 from sys import version_info as _python
 
 if _python >= (3, 9):
@@ -11,7 +12,6 @@ if _python >= (3, 9):
     from importlib.resources import files
 else:
     from importlib_resources import files
-
 
 if _python >= (3, 10):
     # .select() was introduced in 3.10
@@ -21,7 +21,7 @@ else:
 
 
 def resource_stream(pkg, path):
-    return files(pkg).joinpath(f'{path}').open('rb')
+    return io.BytesIO(files(pkg).joinpath(f'{path}').read_bytes())
 
 
 def iter_entry_points(group, **kwargs):
