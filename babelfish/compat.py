@@ -7,20 +7,14 @@
 import io
 from sys import version_info as _python
 
-if _python >= (3, 9):
-    # introduced in python 3.9
-    from importlib.resources import files
-else:
-    from importlib_resources import files
-
-if _python >= (3, 10):
-    # .select() was introduced in 3.10
-    from importlib.metadata import entry_points, EntryPoint as _EntryPoint
-else:
-    from importlib_metadata import entry_points, EntryPoint as _EntryPoint
+# introduced in python 3.9
+from importlib.resources import files
+# .select() was introduced in 3.10
+from importlib.metadata import entry_points, EntryPoint as _EntryPoint
 
 
 def resource_stream(pkg, path):
+    print(list(files(pkg).joinpath(f'{path}').iterdir()))
     return io.BytesIO(files(pkg).joinpath(f'{path}').read_bytes())
 
 
