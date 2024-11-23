@@ -16,12 +16,12 @@ COUNTRIES = {}
 COUNTRY_MATRIX = []
 
 #: The namedtuple used in the :data:`COUNTRY_MATRIX`
-IsoCountry = namedtuple('IsoCountry', ['name', 'alpha2'])
+IsoCountry = namedtuple("IsoCountry", ["name", "alpha2"])
 
-f = resource_stream('babelfish', 'data/iso-3166-1.txt')
+f = resource_stream("babelfish.data", "iso-3166-1.txt")
 f.readline()
 for l in f:
-    iso_country = IsoCountry(*l.decode('utf-8').strip().split(';'))
+    iso_country = IsoCountry(*l.decode("utf-8").strip().split(";"))
     COUNTRIES[iso_country.alpha2] = iso_country.name
     COUNTRY_MATRIX.append(iso_country)
 f.close()
@@ -29,8 +29,12 @@ f.close()
 
 class CountryConverterManager(ConverterManager):
     """:class:`~babelfish.converters.ConverterManager` for country converters"""
-    entry_point = 'babelfish.country_converters'
-    internal_converters = ['name = babelfish.converters.countryname:CountryNameConverter']
+
+    entry_point = "babelfish.country_converters"
+    internal_converters = [
+        "name = babelfish.converters.countryname:CountryNameConverter"
+    ]
+
 
 country_converters = CountryConverterManager()
 
@@ -41,13 +45,14 @@ class CountryMeta(type):
     Dynamically redirect :meth:`Country.frommycode` to :meth:`Country.fromcode` with the ``mycode`` `converter`
 
     """
+
     def __getattr__(cls, name):
-        if name.startswith('from'):
+        if name.startswith("from"):
             return partial(cls.fromcode, converter=name[4:])
         return type.__getattribute__(cls, name)
 
 
-class Country(CountryMeta(str('CountryBase'), (object,), {})):
+class Country(CountryMeta(str("CountryBase"), (object,), {})):
     """A country on Earth
 
     A country is represented by a 2-letter code from the ISO-3166 standard
@@ -55,9 +60,10 @@ class Country(CountryMeta(str('CountryBase'), (object,), {})):
     :param string country: 2-letter ISO-3166 country code
 
     """
+
     def __init__(self, country):
         if country not in COUNTRIES:
-            raise ValueError('%r is not a valid country' % country)
+            raise ValueError("%r is not a valid country" % country)
 
         #: ISO-3166 2-letter country code
         self.alpha2 = country
@@ -101,7 +107,7 @@ class Country(CountryMeta(str('CountryBase'), (object,), {})):
         return not self == other
 
     def __repr__(self):
-        return '<Country [%s]>' % self
+        return "<Country [%s]>" % self
 
     def __str__(self):
         return self.alpha2

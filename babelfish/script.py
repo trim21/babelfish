@@ -16,15 +16,17 @@ SCRIPTS = {}
 SCRIPT_MATRIX = []
 
 #: The namedtuple used in the :data:`SCRIPT_MATRIX`
-IsoScript = namedtuple('IsoScript', ['code', 'number', 'name', 'french_name', 'pva', 'date'])
+IsoScript = namedtuple(
+    "IsoScript", ["code", "number", "name", "french_name", "pva", "date"]
+)
 
-f = resource_stream('babelfish', 'data/iso15924-utf8-20131012.txt')
+f = resource_stream("babelfish.data", "iso15924-utf8-20131012.txt")
 f.readline()
 for l in f:
-    l = l.decode('utf-8').strip()
-    if not l or l.startswith('#'):
+    l = l.decode("utf-8").strip()
+    if not l or l.startswith("#"):
         continue
-    script = IsoScript._make(l.split(';'))
+    script = IsoScript._make(l.split(";"))
     SCRIPT_MATRIX.append(script)
     SCRIPTS[script.code] = script.name
 f.close()
@@ -38,9 +40,10 @@ class Script(object):
     :param string script: 4-letter ISO-15924 script code
 
     """
+
     def __init__(self, script):
         if script not in SCRIPTS:
-            raise ValueError('%r is not a valid script' % script)
+            raise ValueError("%r is not a valid script" % script)
 
         #: ISO-15924 4-letter script code
         self.code = script
@@ -70,7 +73,7 @@ class Script(object):
         return not self == other
 
     def __repr__(self):
-        return '<Script [%s]>' % self
+        return "<Script [%s]>" % self
 
     def __str__(self):
         return self.code

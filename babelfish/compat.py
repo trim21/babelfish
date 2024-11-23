@@ -13,7 +13,7 @@ from importlib.metadata import entry_points, EntryPoint as _EntryPoint
 
 
 def resource_stream(pkg: str, path: str):
-    return io.BytesIO(read_binary(pkg, *path.split("/")))
+    return io.BytesIO(read_binary(pkg, path))
 
 
 def iter_entry_points(group, **kwargs):
